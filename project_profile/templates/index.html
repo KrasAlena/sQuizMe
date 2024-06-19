@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+  <p>sQuizMe is an application designed to help students assess their knowledge after reading educational materials.</p>
+
+  <div>
+    <div>
+      <h3>Login</h3>
+      <p>Already have an account? Login to access quizzes.</p>
+      <a href="{{ url_for('login') }}">Login</a>
+    </div>
+    <div>
+      <h3>Create an Account</h3>
+      <p>New to sQuizMe? Create an account to start using the app.</p>
+      <a href="{{ url_for('register') }}">Create an account</a>
+    </div>
+  </div>
+{% endblock %}

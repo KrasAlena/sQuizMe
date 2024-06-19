@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Create Quiz</h2>
+  <form method="POST" action="{{ url_for('create_quiz') }}">
+    {{ form.hidden_tag() }}
+    <div>
+      {{ form.quiz_name.label }}
+      {{ form.quiz_name(class="form-control") }}
+    </div>
+    <div>
+      {{ form.quiz_text.label }}
+      {{ form.quiz_text(class="form-control", rows="10") }}
+    </div>
+    <div>
+      {{ form.num_questions.label }}
+      {{ form.num_questions(class="form-control") }}
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Generate</button>
+  </form>
+{% endblock %}
