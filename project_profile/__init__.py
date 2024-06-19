@@ -6,7 +6,7 @@ from flask_login import LoginManager
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(24)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz_users.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz.db'
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)

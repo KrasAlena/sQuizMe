@@ -79,6 +79,7 @@ def generate_questions_for_quiz(quiz):
     # Генерируем вопросы с помощью ChatGPT
     questions, correct_answers = generate_questions_with_gpt(quiz_text, num_questions)
 
+
     # Сохраняем сгенерированные вопросы в базу данных
     for i, question_text in enumerate(questions, start=1):
         question = Question(question_text=question_text, quiz_id=quiz.id)
@@ -150,6 +151,14 @@ def generate_questions_with_gpt(quiz_text, num_questions):
             answer = Answer(answer_text=answer_text, is_correct=is_correct, question_id=question.id)
             db.session.add(answer)
         db.session.commit()
+
+    for question_text, answers in generated_questions.items():
+        print(f"Question: {question_text}")
+        for i, answer in enumerate(answers, start=1):
+            print(f"{i}. {answer}")
+        print()
+
+    print("Correct answers:", correct_answers)
 
     return generated_questions, correct_answers
 
