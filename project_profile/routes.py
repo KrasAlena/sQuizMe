@@ -1,4 +1,5 @@
 import os
+import json
 from flask import render_template, redirect, url_for, flash
 from project_profile import app, db
 from project_profile.models import User, Quiz, Question, Answer
@@ -66,7 +67,7 @@ def generate_quiz(quiz_id):
         flash('You are not authorized to generate questions for this quiz.', 'danger')
         return redirect(url_for('index'))
 
-    # Генерируем вопросы для квиза
+    # Generate quiz questions
     generate_questions_for_quiz(quiz)
 
     flash('Questions generated successfully!', 'success')
@@ -76,11 +77,10 @@ def generate_questions_for_quiz(quiz):
     quiz_text = quiz.text
     num_questions = quiz.num_questions
 
-    # Генерируем вопросы с помощью ChatGPT
     questions, correct_answers = generate_questions_with_gpt(quiz_text, num_questions)
 
 
-    # Сохраняем сгенерированные вопросы в базу данных
+    # Save generated questions in db
     for i, question_text in enumerate(questions, start=1):
         question = Question(question_text=question_text, quiz_id=quiz.id)
         db.session.add(question)
@@ -94,32 +94,34 @@ def generate_questions_for_quiz(quiz):
 
 
 def generate_questions_with_gpt(quiz_text, num_questions):
-    # Формируем prompt для отправки API ChatGPT
+    # Create prompt for API ChatGPT
     prompt = f"analyze text below and generate {num_questions} quiz questions and strictly 4 answers for each (only one of them is correct). Use this structure:\n"
     prompt += "\t1. Question:\n\t1. answer\n\t2. answer\n\t3. answer\n\t4. answer\n"
     prompt += f"After the all questions give a dictionary of the correct answers like this:\n"
     prompt += "{1: 2, 2: 1, 3: 1, ...}, where key is the question number, value is a number of the correct answer.\n"
 
-    # Добавляем текст квиза к prompt
+    # Add text to the prompt
     prompt += quiz_text
 
-    # Вызываем API ChatGPT для генерации
+    # Call API ChatGPT
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": prompt}],
-        max_tokens=550
+        max_tokens=550,
+        format="json"
     )
 
-    # Выводим полный текст ответа для проверки
-    print("Full response text:")
+    # Testing
+    print('JSON:')
+    print(json.dumps(response, indent=2))
+    print('Full response text:')
     print(response['choices'][0]['message']['content'])
 
-    # Обрабатываем ответ
+    # Processing response
     generated_text = response['choices'][0]['message']['content'].strip()  # Получаем текст ответа
     generated_questions = {}
     correct_answers = {}
 
-    # Разбиваем результат на вопросы и ответы
     current_question = None
     for line in generated_text.splitlines():
         line = line.strip()
@@ -136,16 +138,15 @@ def generate_questions_with_gpt(quiz_text, num_questions):
                 correct_answer_index = int(
                     line.split(": ")[1].split(",")[0].strip())
 
-    # Добавляем последний вопрос и ответы
     if current_question and answers:
         correct_answers[len(generated_questions)] = correct_answer_index
-        # Создаем объект Question и сохраняем его в базе данных
+
         question = Question(question_text=current_question,
-                            quiz_id=None)  # Здесь quiz_id нужно указать после создания Quiz
+                            quiz_id=None)
         db.session.add(question)
         db.session.commit()
 
-        # Добавляем ответы для последнего вопроса
+
         for j, answer_text in enumerate(answers, start=1):
             is_correct = (j == correct_answer_index)
             answer = Answer(answer_text=answer_text, is_correct=is_correct, question_id=question.id)
@@ -161,7 +162,6 @@ def generate_questions_with_gpt(quiz_text, num_questions):
     print("Correct answers:", correct_answers)
 
     return generated_questions, correct_answers
-
 
 
 @app.route('/quiz/<int:quiz_id>', methods=['GET', 'POST'])
