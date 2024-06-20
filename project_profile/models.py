@@ -31,18 +31,22 @@ class Quiz(db.Model):
         return f"Quiz('{self.name}')"
 
 
+#
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_text = db.Column(db.Text, nullable=False)
     quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
     answers = db.relationship('Answer', backref='question', lazy=True)
+    # correct_answer_id = db.Column(db.Integer, db.ForeignKey('answer.id'))
+
+    def __repr__(self):
+        return f"Question('{self.question_text}')"
 
 
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     answer_text = db.Column(db.String(200), nullable=False)
-    is_correct = db.Column(db.Boolean, default=False)
     question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
-
+    is_correct = db.Column(db.Boolean, default=False)
     def __repr__(self):
-        return f"Answer('{self.answer_text}', '{self.is_correct}')"
+        return f"Answer('{self.answer_text}')"

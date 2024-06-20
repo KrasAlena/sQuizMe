@@ -1,5 +1,7 @@
 import os
 import json
+import re
+import ast
 from flask import render_template, redirect, url_for, flash
 from project_profile import app, db
 from project_profile.models import User, Quiz, Question, Answer
@@ -118,51 +120,73 @@ def generate_questions_with_gpt(quiz_text, num_questions):
     print(response['choices'][0]['message']['content'])
 
     # Processing response
-    generated_text = response['choices'][0]['message']['content'].strip()  # Получаем текст ответа
-    generated_questions = {}
-    correct_answers = {}
+    generated_text = response['choices'][0]['message']['content']
+    questions, question_answer_dict = parse_questions_and_answers(generated_text)
 
-    current_question = None
-    for line in generated_text.splitlines():
-        line = line.strip()
-        if line.endswith("Question:"):
-            if current_question:
-                correct_answers[len(generated_questions)] = correct_answer_index
-                generated_questions[current_question] = answers
-            current_question = line[:-1]
-            answers = []
-        elif current_question:
-            if line.startswith("\t"):
-                answers.append(line[1:].strip())
-            elif line.startswith("{"):
-                correct_answer_index = int(
-                    line.split(": ")[1].split(",")[0].strip())
+    # Save generated questions in db
+    correct_answers_dict = {}
+    for question_number_str, answers in question_answer_dict.items():
+        question_number = int(question_number_str)
+        question_text = questions[question_number - 1]  # -1 to convert to 0-based index
 
-    if current_question and answers:
-        correct_answers[len(generated_questions)] = correct_answer_index
-
-        question = Question(question_text=current_question,
-                            quiz_id=None)
+        # Save question in database
+        question = Question(
+            question_text=question_text,
+            quiz_id=None  # Update with actual quiz_id
+        )
         db.session.add(question)
         db.session.commit()
 
-
-        for j, answer_text in enumerate(answers, start=1):
-            is_correct = (j == correct_answer_index)
-            answer = Answer(answer_text=answer_text, is_correct=is_correct, question_id=question.id)
+        # Save answers in database
+        for answer_text in answers:
+            answer = Answer(
+                answer_text=answer_text,
+                question_id=question.id
+            )
             db.session.add(answer)
+            db.session.commit()
+
+        # Determine correct answer index
+        correct_answer_index = correct_answers_dict.get(question_number, 1)  # Default to first answer if not specified
+        correct_answer = question.answers[correct_answer_index - 1]  # -1 because list is 0-indexed
+        question.correct_answer_id = correct_answer.id
         db.session.commit()
 
-    for question_text, answers in generated_questions.items():
-        print(f"Question: {question_text}")
-        for i, answer in enumerate(answers, start=1):
-            print(f"{i}. {answer}")
-        print()
+    print("Questions and answers generated and saved successfully.")
 
-    print("Correct answers:", correct_answers)
+    return questions, correct_answers_dict
 
-    return generated_questions, correct_answers
+def parse_questions_and_answers(generated_text):
+    questions = []
+    question_answer_dict = {}
 
+    current_question_number = None
+    current_answers = []
+
+    lines = generated_text.splitlines()
+    for line in lines:
+        line = line.strip()
+        if line.startswith("{"):
+            break  # Прекращаем обработку после того как найдем словарь с правильными ответами
+
+        if re.match(r"^\d+\. Question:", line):
+            if current_question_number is not None and current_answers:
+                question_answer_dict[current_question_number] = current_answers
+                current_answers = []
+
+            # Извлекаем номер вопроса
+            current_question_number = re.search(r'\d+', line).group()
+            questions.append(line.split("Question: ")[1])
+        elif re.match(r"^\d+\.", line):
+            # Извлекаем вариант ответа
+            answer_text = line.split(". ")[1]
+            current_answers.append(answer_text)
+
+    # Добавляем последний вопрос и его ответы в словарь
+    if current_question_number is not None and current_answers:
+        question_answer_dict[current_question_number] = current_answers
+
+    return questions, question_answer_dict
 
 @app.route('/quiz/<int:quiz_id>', methods=['GET', 'POST'])
 @login_required
