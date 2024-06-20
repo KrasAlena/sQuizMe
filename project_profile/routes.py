@@ -75,90 +75,27 @@ def generate_quiz(quiz_id):
     flash('Questions generated successfully!', 'success')
     return redirect(url_for('quiz', quiz_id=quiz_id))
 
+
 def generate_questions_for_quiz(quiz):
-    # quiz_text = quiz.text
-    # num_questions = quiz.num_questions
+    questions, question_answer_dict = generate_questions_with_gpt(quiz, quiz.num_questions)
 
-    questions, correct_answers = generate_questions_with_gpt(quiz, quiz.num_questions)
-
-
-    # Save generated questions in db
+    # Save generated questions and answers in db
     for i, question_text in enumerate(questions, start=1):
         question = Question(question_text=question_text, quiz_id=quiz.id)
         db.session.add(question)
         db.session.commit()
 
-        for j, answer_text in enumerate(correct_answers[i], start=1):
-            is_correct = (j == correct_answers[i][0])
+        answers_for_question = question_answer_dict.get(str(i), [])
+
+        for j, answer_text in enumerate(answers_for_question, start=1):
+            is_correct = (j == 1)  # Assuming the first answer is always correct based on correct_answers structure
             answer = Answer(answer_text=answer_text, is_correct=is_correct, question_id=question.id)
             db.session.add(answer)
-            db.session.commit()
 
+        db.session.commit()
 
-# def generate_questions_with_gpt(quiz_text, num_questions):
-#     # Create prompt for API ChatGPT
-#     prompt = f"analyze text below and generate {num_questions} quiz questions and strictly 4 answers for each (only one of them is correct). Use this structure:\n"
-#     prompt += "\t1. Question:\n\t1. answer\n\t2. answer\n\t3. answer\n\t4. answer\n"
-#     prompt += f"After the all questions give a dictionary of the correct answers like this:\n"
-#     prompt += "{1: 2, 2: 1, 3: 1, ...}, where key is the question number, value is a number of the correct answer.\n"
-#
-#     # Add text to the prompt
-#     prompt += quiz_text
-#
-#     # Call API ChatGPT
-#     response = openai.ChatCompletion.create(
-#         model="gpt-3.5-turbo",
-#         messages=[{"role": "system", "content": prompt}],
-#         max_tokens=550,
-#         format="json"
-#     )
-#
-#     # Testing
-#     print('JSON:')
-#     print(json.dumps(response, indent=2))
-#     print('Full response text:')
-#     print(response['choices'][0]['message']['content'])
-#
-#     # Processing response
-#     generated_text = response['choices'][0]['message']['content']
-#     questions, question_answer_dict = parse_questions_and_answers(generated_text)
-#
-#     # Save generated questions in db
-#     correct_answers_dict = {}
-#     for question_number_str, answers in question_answer_dict.items():
-#         question_number = int(question_number_str)
-#         question_text = questions[question_number - 1]  # -1 to convert to 0-based index
-#
-#
-#
-#         # Save question in database
-#         question = Question(
-#             question_text=question_text,
-#             quiz_id=None  # Update with actual quiz_id
-#         )
-#         db.session.add(question)
-#         db.session.commit()
-#
-#         # Save answers in database
-#         for answer_text in answers:
-#             is_correct = (answers.index(answer_text) + 1 == correct_answers_dict.get(question_number, 1))
-#             answer = Answer(
-#                 answer_text=answer_text,
-#                 question_id=question.id,
-#                 is_correct=is_correct
-#             )
-#             db.session.add(answer)
-#             db.session.commit()
-#
-#         # Determine correct answer index
-#         correct_answer_index = correct_answers_dict.get(question_number, 1)  # Default to first answer if not specified
-#         correct_answer = question.answers[correct_answer_index - 1]  # -1 because list is 0-indexed
-#         question.correct_answer_id = correct_answer.id
-#         db.session.commit()
-#
-#     print("Questions and answers generated and saved successfully.")
-#
-#     return questions, correct_answers_dict
+    print("Questions and answers generated and saved successfully.")
+
 def generate_questions_with_gpt(quiz, num_questions):
     # Create prompt for API ChatGPT
     prompt = f"analyze text below and generate {num_questions} quiz questions and strictly 4 answers for each (only one of them is correct). Use this structure:\n"
@@ -195,7 +132,7 @@ def generate_questions_with_gpt(quiz, num_questions):
 
     print("Questions and answers generated successfully.")
 
-    return questions, correct_answers_dict
+    return questions, question_answer_dict
 
 def parse_questions_and_answers(generated_text):
     questions = []
