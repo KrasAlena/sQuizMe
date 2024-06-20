@@ -77,7 +77,7 @@ def generate_quiz(quiz_id):
 
 
 def generate_questions_for_quiz(quiz):
-    questions, question_answer_dict = generate_questions_with_gpt(quiz, quiz.num_questions)
+    questions, question_answer_dict, correct_answers = generate_questions_with_gpt(quiz, quiz.num_questions)
 
     # Save generated questions and answers in db
     for i, question_text in enumerate(questions, start=1):
@@ -86,9 +86,12 @@ def generate_questions_for_quiz(quiz):
         db.session.commit()
 
         answers_for_question = question_answer_dict.get(str(i), [])
+        # correct_answers = list(correct_answers_dict.values())
+        # correct_answers_list = [item[0] for item in correct_answers]
+
 
         for j, answer_text in enumerate(answers_for_question, start=1):
-            is_correct = (j == 1)  # Assuming the first answer is always correct based on correct_answers structure
+            is_correct = (answer_text in correct_answers)
             answer = Answer(answer_text=answer_text, is_correct=is_correct, question_id=question.id)
             db.session.add(answer)
 
@@ -122,21 +125,23 @@ def generate_questions_with_gpt(quiz, num_questions):
 
     # Processing response
     generated_text = response['choices'][0]['message']['content']
-    questions, question_answer_dict = parse_questions_and_answers(generated_text)
+    questions, question_answer_dict, correct_answers = parse_questions_and_answers(generated_text)
 
     # Prepare correct answers dictionary
-    correct_answers_dict = {}
-    for question_number_str, answers in question_answer_dict.items():
-        question_number = int(question_number_str)
-        correct_answers_dict[question_number] = [answers[correct_answers_dict.get(question_number, 1) - 1]]
+    # correct_answers_dict = {}
+    # for question_number_str, answers in question_answer_dict.items():
+    #     question_number = int(question_number_str)
+    #     correct_answers_dict[question_number] = [answers[correct_answers_dict.get(question_number, 1) - 1]]
+
 
     print("Questions and answers generated successfully.")
-
-    return questions, question_answer_dict
+    print(f'KEYS: {correct_answers}')
+    return questions, question_answer_dict, correct_answers
 
 def parse_questions_and_answers(generated_text):
     questions = []
     question_answer_dict = {}
+    correct_answers_dict = {}
 
     current_question_number = None
     current_answers = []
@@ -145,7 +150,7 @@ def parse_questions_and_answers(generated_text):
     for line in lines:
         line = line.strip()
         if line.startswith("{"):
-            break  # Прекращаем обработку после того как найдем словарь с правильными ответами
+            break
 
         if re.match(r"^\d+\. Question:", line):
             if current_question_number is not None and current_answers:
@@ -164,12 +169,7 @@ def parse_questions_and_answers(generated_text):
     if current_question_number is not None and current_answers:
         question_answer_dict[current_question_number] = current_answers
 
-    return questions, question_answer_dict
+    match = re.search(r'\{(?:\n\d+: \d+,?)+\n\}', generated_text)
 
-@app.route('/quiz/<int:quiz_id>', methods=['GET', 'POST'])
-@login_required
-def quiz(quiz_id):
-    quiz = Quiz.query.get_or_404(quiz_id)
-    questions = quiz.questions
-
-    return render_template('quiz.html', quiz=quiz, questions=questions)
+    if match:
+        correct_an
