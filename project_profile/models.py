@@ -46,4 +46,7 @@ class Question(db.Model):
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     answer_text = db.Column(db.String(200), nullable=False)
-    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable
+    question_id = db.Column(db.Integer, db.ForeignKey('question.id'), nullable=False)
+    is_correct = db.Column(db.Boolean, default=False)
+    def __repr__(self):
+        return f"Answer('{self.answer_text}')"

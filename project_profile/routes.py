@@ -86,9 +86,6 @@ def generate_questions_for_quiz(quiz):
         db.session.commit()
 
         answers_for_question = question_answer_dict.get(str(i), [])
-        # correct_answers = list(correct_answers_dict.values())
-        # correct_answers_list = [item[0] for item in correct_answers]
-
 
         for j, answer_text in enumerate(answers_for_question, start=1):
             is_correct = (answer_text in correct_answers)
@@ -113,7 +110,7 @@ def generate_questions_with_gpt(quiz, num_questions):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": prompt}],
-        max_tokens=550,
+        max_tokens=700,
         format="json"
     )
 
@@ -126,12 +123,6 @@ def generate_questions_with_gpt(quiz, num_questions):
     # Processing response
     generated_text = response['choices'][0]['message']['content']
     questions, question_answer_dict, correct_answers = parse_questions_and_answers(generated_text)
-
-    # Prepare correct answers dictionary
-    # correct_answers_dict = {}
-    # for question_number_str, answers in question_answer_dict.items():
-    #     question_number = int(question_number_str)
-    #     correct_answers_dict[question_number] = [answers[correct_answers_dict.get(question_number, 1) - 1]]
 
 
     print("Questions and answers generated successfully.")
@@ -169,7 +160,38 @@ def parse_questions_and_answers(generated_text):
     if current_question_number is not None and current_answers:
         question_answer_dict[current_question_number] = current_answers
 
-    match = re.search(r'\{(?:\n\d+: \d+,?)+\n\}', generated_text)
+    # match = re.search(r'\{(?:\n\d+: \d+,?)+\n\}', generated_text)
+    match = re.search(r'\{\s*(\d+)\s*:\s*(\d+)\s*(,\s*(\d+)\s*:\s*(\d+)\s*)*\}', generated_text)
 
     if match:
-        correct_an
+        correct_answers_str = match.group()
+        # Преобразуем строку в словарь с использованием модуля ast
+        try:
+            correct_answers_dict = ast.literal_eval(correct_answers_str)
+        except SyntaxError as e:
+            print("Ошибка при интерпретации строки как словаря:", e)
+    else:
+        print("Не удалось найти строку с правильными ответами.")
+    print(f'Correct answers: {correct_answers_dict}')
+
+    correct_answers = []
+    for question_number_str, correct_answer_index in correct_answers_dict.items():
+        question_number = int(question_number_str)  # Преобразуем ключ в integer
+        try:
+            correct_answer = question_answer_dict[str(question_number)][
+                correct_answer_index - 1]  # -1 because correct_answer_index is 1-based
+            correct_answers.append(correct_answer)
+        except KeyError:
+            print(f"Вопрос {question_number} не найден в словаре вопросов и ответов.")
+
+    return questions, question_answer_dict, correct_answers
+
+
+
+@app.route('/quiz/<int:quiz_id>', methods=['GET', 'POST'])
+@login_required
+def quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)
+    questions = quiz.questions
+
+    return render_template('quiz.html', quiz=quiz, questions=questions)

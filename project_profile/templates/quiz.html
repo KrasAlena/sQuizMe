@@ -9,7 +9,7 @@
       <ul>
         {% for answer in question.answers %}
           <li>
-            <input type="radio" id="answer{{ answer.id }}" name="answer" value="{{ answer.id }}">
+            <input type="radio" id="answer{{ answer.id }}" name="answer{{ question.id }}" value="{{ answer.id }}">
             <label for="answer{{ answer.id }}">{{ answer.answer_text }}</label>
           </li>
         {% endfor %}
