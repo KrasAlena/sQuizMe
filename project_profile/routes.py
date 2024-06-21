@@ -2,7 +2,7 @@ import os
 import json
 import re
 import ast
-from flask import render_template, redirect, url_for, flash
+from flask import request, render_template, redirect, url_for, flash
 from project_profile import app, db
 from project_profile.models import User, Quiz, Question, Answer
 from project_profile.forms import LoginForm, RegistrationForm, QuizForm
@@ -193,5 +193,31 @@ def parse_questions_and_answers(generated_text):
 def quiz(quiz_id):
     quiz = Quiz.query.get_or_404(quiz_id)
     questions = quiz.questions
+
+    if request.method == 'POST':
+        # Get answers from user
+        correct_count = 0
+        question_results = []
+
+        for question in questions:
+            correct_answer = next((answer for answer in question.answers if answer.is_correct), None)
+            user_answer_id = int(request.form.get(f'answer{question.id}'))
+
+            if user_answer_id == correct_answer.id:
+                correct_count += 1
+
+            question_results.append({
+                'question_text': question.question_text,
+                'correct_answer': correct_answer.answer_text
+            })
+
+        # Preparing results to display
+        results = {
+            'correct_count': correct_count,
+            'total_questions': len(questions),
+            'question_results': question_results
+        }
+
+        return render_template('quiz.html', quiz=quiz, questions=questions, results=results)
 
     return render_template('quiz.html', quiz=quiz, questions=questions)

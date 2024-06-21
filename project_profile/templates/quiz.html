@@ -17,4 +17,18 @@
     {% endfor %}
     <button type="submit">Finish</button>
   </form>
+
+  {% if results %}
+    <h2>Your results: {{ results.correct_count or 0 }}/{{ results.total_questions or 0 }}</h2>
+    <h3>Questions with correct answers:</h3>
+    <ul>
+      {% for question_result in results.question_results %}
+        <li>
+          <strong>Question:</strong> "{{ question_result.question_text }}"
+          <br>
+          <strong>Correct answer:</strong> "{{ question_result.correct_answer }}"
+        </li>
+      {% endfor %}
+    </ul>
+  {% endif %}
 {% endblock %}
