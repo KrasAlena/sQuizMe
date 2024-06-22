@@ -3,13 +3,19 @@
 <head>
     <title>sQuizMe</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-    <link href="images/favicon.png" type="image/png" rel="icon">
+    <link href="static/images/favicon.png" type="image/png" rel="icon">
 <!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">-->
 </head>
 <body>
     <header>
         <h1>Welcome to sQuizMe</h1>
-
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">Home</a></li>
+                <li><a href="{{ url_for('my_quizzes') }}">My quizzes</a></li>
+                <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            </ul>
+        </nav>
     </header>
     <main>
         {% with messages = get_flashed_messages(with_categories=true) %}

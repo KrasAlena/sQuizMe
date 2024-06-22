@@ -148,15 +148,15 @@ def parse_questions_and_answers(generated_text):
                 question_answer_dict[current_question_number] = current_answers
                 current_answers = []
 
-            # Извлекаем номер вопроса
+            # Extract question number
             current_question_number = re.search(r'\d+', line).group()
             questions.append(line.split("Question: ")[1])
         elif re.match(r"^\d+\.", line):
-            # Извлекаем вариант ответа
+            # Extract answer
             answer_text = line.split(". ")[1]
             current_answers.append(answer_text)
 
-    # Добавляем последний вопрос и его ответы в словарь
+    # Add last question and its answers to the dictionary
     if current_question_number is not None and current_answers:
         question_answer_dict[current_question_number] = current_answers
 
@@ -165,18 +165,18 @@ def parse_questions_and_answers(generated_text):
 
     if match:
         correct_answers_str = match.group()
-        # Преобразуем строку в словарь с использованием модуля ast
+        # Convert string to a dictionary using module ast
         try:
             correct_answers_dict = ast.literal_eval(correct_answers_str)
         except SyntaxError as e:
-            print("Ошибка при интерпретации строки как словаря:", e)
+            print("Error during a string interpretation:", e)
     else:
-        print("Не удалось найти строку с правильными ответами.")
+        print("A string with the correct answers wasn't found")
     print(f'Correct answers: {correct_answers_dict}')
 
     correct_answers = []
     for question_number_str, correct_answer_index in correct_answers_dict.items():
-        question_number = int(question_number_str)  # Преобразуем ключ в integer
+        question_number = int(question_number_str)  # Convert key to integer
         try:
             correct_answer = question_answer_dict[str(question_number)][
                 correct_answer_index - 1]  # -1 because correct_answer_index is 1-based
@@ -221,3 +221,18 @@ def quiz(quiz_id):
         return render_template('quiz.html', quiz=quiz, questions=questions, results=results)
 
     return render_template('quiz.html', quiz=quiz, questions=questions)
+
+
+@app.route('/my_quizzes')
+@login_required
+def my_quizzes():
+    quizzes = Quiz.query.filter_by(author=current_user).all()
+    return render_template('my_quizzes.html', quizzes=quizzes)
+
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.', 'success')
+    return redirect(url_for('index'))
