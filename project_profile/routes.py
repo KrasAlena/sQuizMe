@@ -230,6 +230,44 @@ def my_quizzes():
     return render_template('my_quizzes.html', quizzes=quizzes)
 
 
+@app.route('/rename_quiz/<int:quiz_id>', methods=['POST'])
+@login_required
+def rename_quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)
+
+    if quiz.author != current_user:
+        flash('You are not authorized to rename this quiz.', 'danger')
+        return redirect(url_for('my_quizzes'))
+
+    new_name = request.form.get('new_name')
+    if new_name:
+        quiz.name = new_name
+        db.session.commit()
+        flash(f'Quiz "{quiz.name}" renamed successfully!', 'success')
+    else:
+        flash('Invalid new name provided.', 'danger')
+
+    return redirect(url_for('my_quizzes'))
+
+
+@app.route('/delete_quiz/<int:quiz_id>', methods=['POST'])
+@login_required
+def delete_quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)
+
+    if quiz.author != current_user:
+        flash('You are not authorized to delete this quiz.', 'danger')
+        return redirect(url_for('my_quizzes'))
+
+
+    Question.query.filter_by(quiz_id=quiz.id).delete()
+    db.session.delete(quiz)
+    db.session.commit()
+
+    flash('Quiz deleted successfully!', 'success')
+    return redirect(url_for('my_quizzes'))
+
+
 @app.route('/logout')
 @login_required
 def logout():

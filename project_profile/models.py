@@ -1,6 +1,5 @@
 from project_profile import db, login_manager
 from flask_login import UserMixin
-from datetime import datetime
 
 
 @login_manager.user_loader
@@ -36,7 +35,7 @@ class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question_text = db.Column(db.Text, nullable=False)
     quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
-    answers = db.relationship('Answer', backref='question', lazy=True)
+    answers = db.relationship('Answer', cascade='all, delete-orphan', backref='question', lazy=True)
     # correct_answer_id = db.Column(db.Integer, db.ForeignKey('answer.id'))
 
     def __repr__(self):

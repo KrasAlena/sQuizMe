@@ -24,15 +24,10 @@ class QuizForm(FlaskForm):
     generate_button = SubmitField('Generate')
 
 
-# class AnswerForm(FlaskForm):
-#     answers = RadioField('Choose the correct answer', choices=[], coerce=int, validators=[DataRequired()])
-#     submit = SubmitField('Next Question')
-
 class AnswerForm(FlaskForm):
     submit = SubmitField('Finish')
 
 
-# Вам также нужно будет динамически создавать RadioField в зависимости от количества вопросов в квизе
 def create_answer_form(num_questions):
     class DynamicAnswerForm(FlaskForm):
         pass

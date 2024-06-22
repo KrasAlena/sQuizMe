@@ -11,9 +11,11 @@
         <h1>Welcome to sQuizMe</h1>
         <nav>
             <ul>
-                <li><a href="{{ url_for('index') }}">Home</a></li>
+<!--                <li><a href="{{ url_for('index') }}">Home</a></li>-->
+                {% if current_user.is_authenticated %}
                 <li><a href="{{ url_for('my_quizzes') }}">My quizzes</a></li>
                 <li><a href="{{ url_for('logout') }}">Logout</a></li>
+                {% endif %}
             </ul>
         </nav>
     </header>
