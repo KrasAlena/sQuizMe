@@ -223,6 +223,38 @@ def quiz(quiz_id):
     return render_template('quiz.html', quiz=quiz, questions=questions)
 
 
+@app.route('/public_quiz/<int:quiz_id>', methods=['GET', 'POST'])
+def public_quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)
+    questions = quiz.questions
+
+    if request.method == 'POST':
+        correct_count = 0
+        question_results = []
+
+        for question in questions:
+            correct_answer = next((answer for answer in question.answers if answer.is_correct), None)
+            user_answer_id = int(request.form.get(f'answer{question.id}'))
+
+            if user_answer_id == correct_answer.id:
+                correct_count += 1
+
+            question_results.append({
+                'question_text': question.question_text,
+                'correct_answer': correct_answer.answer_text
+            })
+
+        results = {
+            'correct_count': correct_count,
+            'total_questions': len(questions),
+            'question_results': question_results
+        }
+
+        return render_template('quiz.html', quiz=quiz, questions=questions, results=results)
+
+    return render_template('quiz.html', quiz=quiz, questions=questions)
+
+
 @app.route('/my_quizzes')
 @login_required
 def my_quizzes():
@@ -248,6 +280,28 @@ def rename_quiz(quiz_id):
         flash('Invalid new name provided.', 'danger')
 
     return redirect(url_for('my_quizzes'))
+
+
+@app.route('/share_quiz/<int:quiz_id>', methods=['POST'])
+@login_required
+def share_quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)
+
+    if quiz.author != current_user:
+        flash('You are not authorized to share this quiz.', 'danger')
+        return redirect(url_for('my_quizzes'))
+
+    quiz.is_public = True
+    db.session.commit()
+
+    flash('Quiz shared successfully!', 'success')
+    return redirect(url_for('my_quizzes'))
+
+
+@app.route('/community_quizzes')
+def community_quizzes():
+    public_quizzes = Quiz.query.filter_by(is_public=True).all()
+    return render_template('community_quizzes.html', public_quizzes=public_quizzes)
 
 
 @app.route('/delete_quiz/<int:quiz_id>', methods=['POST'])

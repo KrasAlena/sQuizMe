@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Community Quizzes</h2>
+
+  <ul>
+    {% for quiz in public_quizzes %}
+      <li>
+        <a href="{{ url_for('public_quiz', quiz_id=quiz.id) }}">{{ quiz.name }}</a>
+
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
