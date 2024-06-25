@@ -2,7 +2,12 @@
 
 {% block content %}
   <h1>Quiz: {{ quiz.name }}</h1>
-  <button><a href="{{ url_for('create_quiz') }}">Back</a></button>
+<!--  <button><a href="{{ url_for('create_quiz') }}">Back</a></button>-->
+  {% if current_user.is_authenticated %}
+    <button><a href="{{ url_for('create_quiz') }}">Back</a></button>
+  {% else %}
+    <button><a href="{{ url_for('community_quizzes') }}">Back</a></button>
+  {% endif %}
   <form method="post">
     {% for question in questions %}
       <h3>{{ loop.index }}. {{ question.question_text }}</h3>

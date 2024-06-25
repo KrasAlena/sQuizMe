@@ -8,7 +8,9 @@
 </head>
 <body>
     <header>
-        <img class="main-logo" src="static/images/quiz_big_logo.png" alt="logo">
+        <a href="{{ url_for('index') }}">
+            <img class="main-logo" src="{{ url_for('static', filename='images/quiz_big_logo.png') }}" alt="logo">
+        </a>
         <h1>Welcome to sQuizMe</h1>
         <nav>
             <ul>
