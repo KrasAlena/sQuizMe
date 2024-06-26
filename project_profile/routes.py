@@ -3,6 +3,7 @@ import json
 import re
 import ast
 from flask import request, render_template, redirect, url_for, flash
+from flask_bcrypt import generate_password_hash, check_password_hash
 from project_profile import app, db
 from project_profile.models import User, Quiz, Question, Answer
 from project_profile.forms import LoginForm, RegistrationForm, QuizForm
@@ -18,24 +19,53 @@ openai.api_key = os.getenv('OPEN_AI')
 def index():
     return render_template('index.html')
 
+# @app.route('/login', methods=['GET', 'POST'])
+# def login():
+#     form = LoginForm()
+#     if form.validate_on_submit():
+#         user = User.query.filter_by(email=form.email.data).first()
+#         if user and user.password == form.password.data:
+#             login_user(user)
+#             flash('Logged in successfully.', 'success')
+#             return redirect(url_for('create_quiz'))
+#         else:
+#             flash('Login unsuccessful. Please check email and password.', 'danger')
+#     return render_template('login.html', form=form)
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data).first()
-        if user and user.password == form.password.data:
-            login_user(user)
-            flash('Logged in successfully.', 'success')
-            return redirect(url_for('create_quiz'))
+        if user:
+            if user.password.startswith('$2b$'):  # for hashed passwords
+                if check_password_hash(user.password, form.password.data):
+                    login_user(user)
+                    flash('Logged in successfully.', 'success')
+                    return redirect(url_for('create_quiz'))
+                else:
+                    flash('Login unsuccessful. Please check email and password.', 'danger')
+            else:
+                # for old users without hashed passwords
+                if user.password == form.password.data:
+                    login_user(user)
+                    flash('Logged in successfully.', 'success')
+                    return redirect(url_for('create_quiz'))
+                else:
+                    flash('Login unsuccessful. Please check email and password.', 'danger')
         else:
-            flash('Login unsuccessful. Please check email and password.', 'danger')
+            flash('User not found.', 'danger')
+
     return render_template('login.html', form=form)
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        user = User(email=form.email.data, name=form.name.data, password=form.password.data)
+        hashed_password = generate_password_hash(form.password.data).decode('utf-8')
+        user = User(email=form.email.data, name=form.name.data, password=hashed_password)
         db.session.add(user)
         db.session.commit()
         flash('Your account has been created! You are now able to log in.', 'success')
