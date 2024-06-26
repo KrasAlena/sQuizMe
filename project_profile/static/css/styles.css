@@ -1,5 +1,57 @@
-.main-logo {
-    width: 170px;
+body {
+  font-family: "Outfit", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+.logo {
     display: block;
     margin: 0 auto;
+}
+
+.main-logo {
+    width: 170px;
+
+}
+
+.user-logo {
+    width: 70px;
+}
+
+.user-menu {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: rgba(203, 108, 230, 0.35);
+}
+
+.menu-list {
+    display: flex;
+    flex-gap: 10px;
+}
+
+.user-icon {
+    width: 30px;
+    margin-right: 10px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.menu-item {
+    flex: 1 1 auto;
+    margin: 0 10px;
+}
+
+footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: rgba(45, 123, 255, 0.7);
+    padding: 30px 10px;
+    text-align: center;
 }
