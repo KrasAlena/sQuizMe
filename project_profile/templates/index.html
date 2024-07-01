@@ -1,19 +1,37 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Welcome to sQuizMe</h1>
-  <p>sQuizMe is an application designed to help students assess their knowledge after reading educational materials.</p>
+  <h1 class="index-title" data-text="Welcome to sQuizMe">Welcome to sQuizMe</h1>
+  <p class="index-text">sQuizMe is an application designed to help students assess their knowledge after reading educational materials.</p>
+  <h3 class="index-h3">Key features:</h3>
+  <div class="features">
+    <div class="feature">
+      <p class="feature-title">Create your own quizzes</p>
+      <p class="feature-description">Design personalized quizzes with different numbers of questions.</p>
+    </div>
+    <div class="feature">
+      <p class="feature-title">AI-driven quiz generation</p>
+      <p class="feature-description">Automatically generate quizzes using advanced AI algorithms.</p>
+    </div>
+    <div class="feature">
+      <p class="feature-title">Explore community quizzes</p>
+      <p class="feature-description">Discover a diverse range of quizzes curated by fellow users.</p>
+    </div>
+    <div class="feature">
+      <p class="feature-title">User-friendly interface</p>
+      <p class="feature-description">Enjoy an intuitive interface that simplifies quiz creation, browsing, and participation.</p>
+    </div>
+  </div>
+  <p class="index-text">Whether you’re sharpening your skills, preparing for exams, or simply enjoying challenging quizzes, sQuizMe leverages AI to enhance your learning journey and quiz-taking experience.</p>
 
   <div>
-    <div>
-      <h3>Login</h3>
-      <p>Already have an account? Login to access quizzes.</p>
-      <a href="{{ url_for('login') }}">Login</a>
+    <div class="login-block">
+      <p class="index-log-reg-txt">Already have an account? Login to access quizzes.</p>
+      <a class="login-link" href="{{ url_for('login') }}"><button class="btn login-btn">Login</button></a>
     </div>
-    <div>
-      <h3>Create an Account</h3>
-      <p>New to sQuizMe? Create an account to start using the app.</p>
-      <a href="{{ url_for('register') }}">Create an account</a>
+    <div class="login-block">
+      <p class="index-log-reg-txt">New to sQuizMe? Create an account to start using the app.</p>
+      <a class="register-link" href="{{ url_for('register') }}">Create an account</a>
     </div>
   </div>
 
