@@ -1,3 +1,76 @@
+* {
+ padding: 0px;
+ margin: 0px;
+}
+
+*,
+*:before,
+*:after {
+ -moz-box-sizing: border-box;
+ -webkit-box-sizing: border-box;
+ box-sizing: border-box;
+}
+
+:focus,
+:active {
+ outline: none;
+}
+
+a:focus,
+a:active {
+ outline: none;
+}
+
+aside,
+nav,
+footer,
+header,
+section {
+ display: block;
+}
+
+html,
+body {
+ height: 100%;
+ min-width: 320px;
+}
+a,
+button {
+ cursor: pointer;
+}
+
+button::-moz-focus-inner {
+ padding: 0;
+ border: 0;
+}
+
+a,
+a:visited {
+ text-decoration: none;
+}
+
+a:hover {
+ text-decoration: none;
+}
+
+ul li {
+ list-style: none;
+}
+
+img {
+ vertical-align: top;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+ font-weight: inherit;
+ font-size: inherit;
+}
+
 body {
   font-family: "Outfit", sans-serif;
   font-optical-sizing: auto;
@@ -47,6 +120,25 @@ body {
     margin: 0 10px;
 }
 
+main {
+
+}
+
+.alert {
+    width: 100%;
+    padding: 15px 10px;
+}
+
+.alert-success {
+    border: solid 1px #5DB36B;
+    background-color: #A1DDAA;
+}
+
+.alert-danger {
+    border: solid 1px #E85C5C;
+    background-color: #EDA8A8;
+}
+
 footer {
     position: fixed;
     bottom: 0;
@@ -54,4 +146,9 @@ footer {
     background-color: rgba(45, 123, 255, 0.7);
     padding: 30px 10px;
     text-align: center;
+}
+
+.github-icon {
+    width: 40px;
+    margin-bottom: 5px;
 }

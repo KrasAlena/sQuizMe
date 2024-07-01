@@ -4,6 +4,7 @@
     <title>sQuizMe</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link href="static/images/favicon.png" type="image/png" rel="icon">
+    <link rel="icon" href="static/images/favicon.ico" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
@@ -50,6 +51,9 @@
         {% endblock %}
     </main>
     <footer>
+        <a href="https://github.com/KrasAlena/sQuizMe">
+            <img class="github-icon" src="{{ url_for('static', filename='images/github.png') }}" alt="github">
+        </a> <br>
         &copy; sQuizMe 2024
     </footer>
 </body>
