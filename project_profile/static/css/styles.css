@@ -335,3 +335,57 @@ footer {
     color: #fff;
 }
 /*-----------------------------COMMUNITY_QUIZZES.HTML STYLES-----------------------------*/
+
+
+/*-----------------------------LOGIN.HTML STYLES-----------------------------*/
+.login-container {
+    margin: 30px auto;
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-title {
+    font-family: "Seymour One", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #2D7BFF;
+    font-size: 35px;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+.login-control {
+    border: 2px solid rgba(128, 175, 255, 1);
+}
+
+.form-control:focus {
+    border-color: rgba(45, 123, 255, 1);
+    outline: none;
+}
+
+.login-label {
+    color: rgba(45, 123, 255, 1);
+}
+
+.register-text-link {
+    margin-top: 15px;
+    color: #B0B0B0;
+}
