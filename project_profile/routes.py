@@ -140,7 +140,7 @@ def generate_questions_with_gpt(quiz, num_questions):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": prompt}],
-        max_tokens=700,
+        max_tokens=1000,
         format="json"
     )
 
@@ -212,7 +212,7 @@ def parse_questions_and_answers(generated_text):
                 correct_answer_index - 1]  # -1 because correct_answer_index is 1-based
             correct_answers.append(correct_answer)
         except KeyError:
-            print(f"Вопрос {question_number} не найден в словаре вопросов и ответов.")
+            print(f"Question {question_number} not found in the dictionary.")
 
     return questions, question_answer_dict, correct_answers
 
