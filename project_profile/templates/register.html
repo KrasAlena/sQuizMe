@@ -1,26 +1,29 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Register</h2>
-  <form method="POST" action="">
-    {{ form.hidden_tag() }}
-    <div>
-      {{ form.email.label }}
-      {{ form.email(class="form-control") }}
-    </div>
-    <div>
-      {{ form.name.label }}
-      {{ form.name(class="form-control") }}
-    </div>
-    <div>
-      {{ form.password.label }}
-      {{ form.password(class="form-control") }}
-    </div>
-    <div>
-      {{ form.confirm_password.label }}
-      {{ form.confirm_password(class="form-control") }}
-    </div>
-    <button type="submit">{{ form.submit.label }}</button>
-  </form>
-  <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+  <div class="form-container">
+    <h2 class="form-title register-title">Register</h2>
+    <form method="POST" action="">
+      {{ form.hidden_tag() }}
+      <div class="form-group">
+        {{ form.email.label(class="form-label register-label") }}
+        {{ form.email(class="form-control register-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.name.label(class="form-label register-label") }}
+        {{ form.name(class="form-control register-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.password.label(class="form-label register-label") }}
+        {{ form.password(class="form-control register-control") }}
+      </div>
+      <div class="form-group">
+        {{ form.confirm_password.label(class="form-label register-label") }}
+        {{ form.confirm_password(class="form-control register-control") }}
+      </div>
+      <button class="btn register-btn" type="submit">{{ form.submit.label }}</button>
+    </form>
+    <p class="register-text-link">Already have an account? <a class="link register-link" href="{{ url_for('login') }}">Login</a></p>
+  </div>
+
 {% endblock %}

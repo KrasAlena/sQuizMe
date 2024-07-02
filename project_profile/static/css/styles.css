@@ -338,7 +338,7 @@ footer {
 
 
 /*-----------------------------LOGIN.HTML STYLES-----------------------------*/
-.login-container {
+.form-container {
     margin: 30px auto;
     width: 100%;
     max-width: 400px;
@@ -349,13 +349,16 @@ footer {
     text-align: center;
 }
 
-.login-title {
+.form-title {
     font-family: "Seymour One", sans-serif;
     font-weight: 400;
     font-style: normal;
-    color: #2D7BFF;
     font-size: 35px;
     margin-bottom: 20px;
+}
+
+.login-title {
+    color: #2D7BFF;
 }
 
 .form-group {
@@ -388,4 +391,35 @@ footer {
 .register-text-link {
     margin-top: 15px;
     color: #B0B0B0;
+}
+
+.register-title {
+    color: #CB6CE6;
+}
+
+.register-control {
+    border: 2px solid #DBA2EB;
+}
+
+.register-label {
+    color: #CB6CE6;
+}
+
+.register-control:focus {
+    border-color: #CB6CE6;
+    outline: none;
+}
+
+.register-btn {
+    min-width: 150px;
+    font-size: 20px;
+    margin-top: 10px;
+    border: 2px solid #CB6CE6;
+    color: #CB6CE6;
+    transition: all 0.3s;
+}
+
+.register-btn:hover {
+    background-color: #CB6CE6;
+    color: #fff;
 }
