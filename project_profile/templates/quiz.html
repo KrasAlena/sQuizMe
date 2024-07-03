@@ -1,27 +1,26 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Quiz: {{ quiz.name }}</h1>
-<!--  <button><a href="{{ url_for('create_quiz') }}">Back</a></button>-->
+  <h3 class="h3-title">{{ quiz.name }}</h3>
   {% if current_user.is_authenticated %}
-    <button><a href="{{ url_for('create_quiz') }}">Back</a></button>
+    <button><a class="btn-back" href="{{ url_for('create_quiz') }}">&#8592; Back</a></button>
   {% else %}
-    <button><a href="{{ url_for('community_quizzes') }}">Back</a></button>
+    <button><a class="btn-back" href="{{ url_for('community_quizzes') }}">&#8592; Back</a></button>
   {% endif %}
 
-  <form method="post">
+  <form id="quiz-form" method="post">
     {% for question in questions %}
-      <h3>{{ loop.index }}. {{ question.question_text }}</h3>
+      <h3 class="question-name">{{ loop.index }}. {{ question.question_text }}</h3>
       <ul>
         {% for answer in question.answers %}
-          <li>
+          <li class="answer">
             <input type="radio" id="answer{{ answer.id }}" name="answer{{ question.id }}" value="{{ answer.id }}">
             <label for="answer{{ answer.id }}">{{ answer.answer_text }}</label>
           </li>
         {% endfor %}
       </ul>
     {% endfor %}
-    <button type="submit">Finish</button>
+    <button class="btn finish-btn login-btn" type="submit">Finish</button>
   </form>
 
   {% if results %}

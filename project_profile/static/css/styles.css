@@ -282,7 +282,6 @@ footer {
 
 .btn {
     padding: 5px;
-
     height: 40px;
     font-family: "Outfit", sans-serif;
     text-align: center;
@@ -552,3 +551,29 @@ footer {
 }
 
 /*-----------------------------QUIZ.HTML STYLES-----------------------------*/
+.btn-back {
+    text-decoration: none;
+    color: #B0B0B0;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#quiz-form {
+    margin-top: 10px;
+    padding-left: 15px;
+}
+
+.question-name {
+    font-weight: 500;
+    font-size: 17px;
+    margin: 20px 0 10px 0;
+}
+
+.answer {
+    margin-bottom: 5px;
+}
+
+.finish-btn {
+    display: block;
+    margin: 5px auto;
+}
