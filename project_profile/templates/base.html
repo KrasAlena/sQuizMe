@@ -29,9 +29,9 @@
                 <span class="username">{{ current_user.name }}</span>
             </div>
             <div class="menu-list">
-                <div class="menu-item"><a href="{{ url_for('my_quizzes') }}">My quizzes</a></div>
-                <div class="menu-item"><a href="{{ url_for('community_quizzes') }}">Explore Community Quizzes</a></div>
-                <div class="menu-item"><a href="{{ url_for('logout') }}">Logout</a></div>
+                <div class="menu-item"><a class="menu-item-link" href="{{ url_for('my_quizzes') }}">My quizzes</a></div>
+                <div class="menu-item"><a class="menu-item-link" href="{{ url_for('community_quizzes') }}">Community quizzes</a></div>
+                <div class="menu-item"><a class="menu-item-link" href="{{ url_for('logout') }}">Logout</a></div>
             </div>
 
         </div>

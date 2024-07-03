@@ -97,12 +97,13 @@ body {
 }
 
 .user-menu {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
     padding: 10px;
-    background-color: rgba(203, 108, 230, 0.35);
+    background-color: rgba(203, 108, 230, 1);
 }
 
 .menu-list {
@@ -118,11 +119,35 @@ body {
 .user-info {
     display: flex;
     align-items: center;
+    color: #fff;
 }
 
 .menu-item {
     flex: 1 1 auto;
     margin: 0 10px;
+}
+
+.menu-item-link {
+    color: #fff;
+    position: relative;
+    transition: all 0.4s;
+}
+
+.menu-item-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 2px;
+    background-color: #fff;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.3s;
+}
+
+.menu-item-link:hover::after {
+    transform: scaleX(1);
 }
 
 .container {
@@ -193,7 +218,7 @@ footer {
     font-size: 20px;
 }
 
-.index-h3 {
+.h3-title {
     text-align: center;
     font-size: 30px;
     font-weight: 500;
@@ -423,3 +448,81 @@ footer {
     background-color: #CB6CE6;
     color: #fff;
 }
+/*-----------------------------CREATE_QUIZ.HTML STYLES-----------------------------*/
+.form-control::placeholder {
+    font-family: "Outfit", sans-serif;
+}
+
+.quiz-control {
+    margin-top: 10px;
+}
+
+.form-quiz-name {
+    width: 30%;
+}
+
+.quiz-control {
+    border: 2px solid #B0B0B0;
+}
+
+.quiz-control:focus {
+    border-color: #000;
+    outline: none;
+}
+
+.form-quiz-question-amount {
+    width: 20%;
+}
+
+.btn-quiz-generate {
+    display: block;
+    margin: 10px auto;
+    width: 150px;
+    position: relative;
+    background: white;
+    color: #CB6CE6;
+    transition: all ease 0.2s;
+}
+
+.btn-quiz-generate:before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(to right, #FFD200, #CB6CE6);
+    z-index: -1;
+    border-radius: 4px;
+}
+
+.btn-quiz-generate:hover {
+    background: linear-gradient(to right, #FFD200, #CB6CE6);
+    color: #fff;
+}
+/*
+.btn-community-quiz {
+    margin-top: 10px;
+    position: relative;
+    background: white;
+    color: #CB6CE6;
+    transition: all ease 0.2s;
+}
+
+.btn-community-quiz:before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(to right, #FFD200, #CB6CE6);
+    z-index: -1;
+    border-radius: 4px;
+}
+
+.btn-community-quiz:hover {
+    background: linear-gradient(to right, #FFD200, #CB6CE6);
+    color: #fff;
+}
+*/

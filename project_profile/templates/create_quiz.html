@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Create Quiz</h2>
+  <h2 class="create-quiz-title h3-title">Create quiz</h2>
 
   <form method="POST" action="{{ url_for('create_quiz') }}">
     {{ form.hidden_tag() }}
-    <div>
-      {{ form.quiz_name.label }}
-      {{ form.quiz_name(class="form-control") }}
+    <div class="form-group form-quiz-name">
+      {{ form.quiz_name.label(class="form-label quiz-label") }}
+      {{ form.quiz_name(class="form-control quiz-control", placeholder="Enter the name of the quiz") }}
     </div>
-    <div>
-      {{ form.quiz_text.label }}
-      {{ form.quiz_text(class="form-control", rows="10") }}
+    <div class="form-group">
+      {{ form.quiz_text.label(class="form-label quiz-label") }}
+      {{ form.quiz_text(class="form-control quiz-control", rows="10", placeholder="Enter text") }}
     </div>
-    <div>
-      {{ form.num_questions.label }}
-      {{ form.num_questions(class="form-control") }}
+    <div class="form-group form-quiz-question-amount">
+      {{ form.num_questions.label(class="form-label quiz-label") }}
+      {{ form.num_questions(class="form-control quiz-control") }}
     </div>
-    <button type="submit" class="btn btn-primary mt-3">Generate</button>
+    <button type="submit" class="btn btn-quiz-generate">Generate</button>
   </form>
 {% endblock %}
