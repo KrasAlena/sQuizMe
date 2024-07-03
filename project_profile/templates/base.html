@@ -59,4 +59,16 @@
         &copy; sQuizMe 2024
     </footer>
 </body>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('create-quiz-form');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const generateBtn = document.getElementById('generate-btn');
+
+    form.addEventListener('submit', function() {
+      loadingIndicator.style.display = 'block';
+      generateBtn.disabled = true; // Disable the generate button during loading
+    });
+  });
+</script>
 </html>

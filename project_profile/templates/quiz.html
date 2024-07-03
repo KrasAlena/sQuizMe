@@ -8,6 +8,7 @@
   {% else %}
     <button><a href="{{ url_for('community_quizzes') }}">Back</a></button>
   {% endif %}
+
   <form method="post">
     {% for question in questions %}
       <h3>{{ loop.index }}. {{ question.question_text }}</h3>

@@ -130,7 +130,7 @@ def generate_questions_with_gpt(quiz, num_questions):
     # Create prompt for API ChatGPT
     prompt = f"analyze text below and generate {num_questions} quiz questions and strictly 4 answers for each (only one of them is correct). Use this structure:\n"
     prompt += "\t1. Question:\n\t1. answer\n\t2. answer\n\t3. answer\n\t4. answer\n"
-    prompt += f"After the all questions give a dictionary of the correct answers like this:\n"
+    prompt += f"After the all questions give a dictionary of the correct answers strictly like this (without new lines between keys:\n"
     prompt += "{{1: 2, 2: 1, 3: 1, ...}}, where key is the question number, value is a number of the correct answer.\n"
 
     # Add text to the prompt

@@ -3,7 +3,7 @@
 {% block content %}
   <h2 class="create-quiz-title h3-title">Create quiz</h2>
 
-  <form method="POST" action="{{ url_for('create_quiz') }}">
+  <form id="create-quiz-form" method="POST" action="{{ url_for('create_quiz') }}">
     {{ form.hidden_tag() }}
     <div class="form-group form-quiz-name">
       {{ form.quiz_name.label(class="form-label quiz-label") }}
@@ -17,6 +17,26 @@
       {{ form.num_questions.label(class="form-label quiz-label") }}
       {{ form.num_questions(class="form-control quiz-control") }}
     </div>
-    <button type="submit" class="btn btn-quiz-generate">Generate</button>
+    <button id="generate-btn" type="submit" class="btn btn-quiz-generate">Generate</button>
   </form>
+
+  <div id="loading-indicator" style="display: none;">
+    <div class="spinner-container">
+      <div class="spinner"></div>
+    </div>
+    <p class="loader-text">Generating questions...</p>
+  </div>
 {% endblock %}
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('create-quiz-form');
+    const loadingIndicator = document.getElementById('loading-indicator');
+    const generateBtn = document.getElementById('generate-btn');
+
+    form.addEventListener('submit', function() {
+      loadingIndicator.style.display = 'block';
+      generateBtn.disabled = true; // Disable the generate button during loading
+    });
+  });
+</script>
