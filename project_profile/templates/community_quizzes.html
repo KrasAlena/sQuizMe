@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>Community Quizzes</h2>
-
-  <ul>
+  <h3 class="h3-title">Community quizzes</h3>
+  <p class="index-text">
+    Explore quizzes created and shared by our registered users. Here, members of our community share their quizzes to give others a glimpse into our app’s features and content without needing to sign up. Whether you’re curious about different topics or looking for fun challenges, our community quizzes offer a diverse range of questions and themes. Dive in, discover, and enjoy the world of quizzes brought to you by our enthusiastic community!
+  </p>
+  <img class="arrow-down" src="{{ url_for('static', filename='images/arrow_down.png') }}" alt="Arrow">
+  <ul class="cards my-quizzes-cards community-quiz-cards">
     {% for quiz in public_quizzes %}
-      <li>
-        <a href="{{ url_for('public_quiz', quiz_id=quiz.id) }}">{{ quiz.name }}</a>
-
+      <li class="card quiz-card community-quiz-card">
+        <a class="quiz-title-card" href="{{ url_for('public_quiz', quiz_id=quiz.id) }}">{{ quiz.name }}</a>
       </li>
     {% endfor %}
   </ul>
