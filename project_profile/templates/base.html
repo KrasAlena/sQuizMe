@@ -70,5 +70,17 @@
       generateBtn.disabled = true; // Disable the generate button during loading
     });
   });
+
+    document.addEventListener('DOMContentLoaded', function() {
+    // Select all alert elements
+    const alerts = document.querySelectorAll('.alert');
+
+    // Automatically hide alerts after 3 seconds
+    alerts.forEach(function(alert) {
+      setTimeout(function() {
+        alert.style.display = 'none';
+      }, 3000); // 3000 milliseconds = 3 seconds
+    });
+  });
 </script>
 </html>

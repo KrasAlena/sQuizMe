@@ -576,4 +576,31 @@ footer {
 .finish-btn {
     display: block;
     margin: 5px auto;
+    margin-bottom: 30px;
+}
+
+.count {
+    font-weight: 800;
+    font-size: 35px;
+    margin: 0 5px;
+}
+
+.correct-results {
+    color: #5DB36B;
+}
+
+.score-image {
+    display: block;
+    margin: 15px auto;
+    width: 230px;
+}
+
+.correct-answers-title {
+    font-weight: 500;
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.correct-answer {
+    margin-bottom: 10px;
 }

@@ -24,11 +24,19 @@
   </form>
 
   {% if results %}
-    <h2>Your results: {{ results.correct_count or 0 }}/{{ results.total_questions or 0 }}</h2>
-    <h3>Questions with correct answers:</h3>
+    {% set percentage_correct = (results.correct_count / results.total_questions) * 100 %}
+    <h3 class="h3-title">Your results: <span class="count correct-results">{{ results.correct_count or 0 }}</span>/<span class="count">{{ results.total_questions or 0 }}</span></h3>
+    {% if percentage_correct >= 80 %}
+      <img class="score-image" src="{{ url_for('static', filename='images/great.png') }}" alt="High score image">
+    {% elif percentage_correct >= 50 %}
+      <img class="score-image" src="{{ url_for('static', filename='images/notbad.png') }}" alt="Medium score image">
+    {% else %}
+      <img class="score-image" src="{{ url_for('static', filename='images/again.png') }}" alt="Low score image">
+    {% endif %}
+    <p class="correct-answers-title">Questions with correct answers:</p>
     <ul>
       {% for question_result in results.question_results %}
-        <li>
+        <li class="correct-answer">
           <strong>Question:</strong> "{{ question_result.question_text }}"
           <br>
           <strong>Correct answer:</strong> "{{ question_result.correct_answer }}"
