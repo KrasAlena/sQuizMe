@@ -1,35 +1,42 @@
-
 {% extends 'base.html' %}
 
 {% block content %}
-  <h2>My quizzes</h2>
+  <h3 class="h3-title">My quizzes</h3>
 
-  <ul>
+  <ul class="cards my-quizzes-cards">
     {% for quiz in quizzes %}
-      <li>
-        <a href="{{ url_for('quiz', quiz_id=quiz.id) }}">{{ quiz.name }}</a>
-<!--        <form action="{{ url_for('rename_quiz', quiz_id=quiz.id) }}" method="post" style="display: inline;">-->
-<!--          <input type="text" name="new_name" placeholder="Enter new name" required>-->
-<!--          <button type="submit">Rename</button>-->
-<!--        </form>-->
-        <button class="rename-btn">Rename</button>
-        <form method="POST" action="{{ url_for('delete_quiz', quiz_id=quiz.id) }}" onsubmit="return confirm('Are you sure you want to delete this quiz?')">
-          <button type="submit" class="btn btn-danger">Delete</button>
-        </form>
-        <form action="{{ url_for('rename_quiz', quiz_id=quiz.id) }}" method="post" class="rename-form" style="display: none;">
-          <input type="text" name="new_name" placeholder="Enter new name" required>
-          <button type="submit">Confirm</button>
-        </form>
+      <li class="card quiz-card">
+        <a class="quiz-title-card" href="{{ url_for('quiz', quiz_id=quiz.id) }}">{{ quiz.name }}</a>
+        <div class="quiz-buttons">
+          <button class="rename-btn quiz-btn-item btn quiz-manage-btn">Rename</button>
+          <form class="quiz-btn-item" method="POST" action="{{ url_for('delete_quiz', quiz_id=quiz.id) }}" onsubmit="return confirm('Are you sure you want to delete this quiz?')">
+            <button type="submit" class="btn btn-danger quiz-manage-btn">Delete</button>
+          </form>
+          <form class="quiz-btn-item rename-form" action="{{ url_for('rename_quiz', quiz_id=quiz.id) }}" method="post" style="display: none;">
+            <input class="rename-input" type="text" name="new_name" placeholder="Enter new name" required>
+            <div class="rename-buttons">
+              <button class="quiz-manage-btn rename-confirm-btn" type="submit">
+                <img class="rename-confirm-btn-img" src="{{ url_for('static', filename='images/check-mark.png') }}" alt="Confirm" title="Confirm renaming">
+              </button>
+              <button class="quiz-manage-btn cancel-btn">
+                <img class="rename-cancel-btn-img" src="{{ url_for('static', filename='images/cancel.png') }}" alt="Confirm" title="Confirm renaming">
+              </button>
+            </div>
+          </form>
         {% if not quiz.is_public %}
-          <form method="POST" action="{{ url_for('share_quiz', quiz_id=quiz.id) }}">
-            <button type="submit" class="btn btn-success">Share</button>
+          <form class="quiz-btn-item" method="POST" action="{{ url_for('share_quiz', quiz_id=quiz.id) }}">
+            <button type="submit" class="btn btn-success quiz-manage-btn">
+              <img class="share-img" src="{{ url_for('static', filename='images/share.png') }}" alt="Share" title="Share with community">
+            </button>
           </form>
         {% endif %}
+        </div>
+
       </li>
     {% endfor %}
   </ul>
 
-  <script>
+<!--  <script>
     document.addEventListener('DOMContentLoaded', function() {
       const renameBtns = document.querySelectorAll('.rename-btn');
       renameBtns.forEach(btn => {
@@ -38,6 +45,38 @@
           const renameForm = parentLi.querySelector('.rename-form');
           renameForm.style.display = 'block';
           this.style.display = 'none';
+
+      const cancelBtns = document.querySelectorAll('.cancel-btn');
+      cancelBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const renameForm = this.closest('.rename-form');
+          const renameBtn = renameForm.parentElement.querySelector('.rename-btn');
+          renameForm.style.display = 'none';
+          renameBtn.style.display = 'block';
+        });
+      });
+    });
+  </script> -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const renameBtns = document.querySelectorAll('.rename-btn');
+      renameBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+          const parentLi = this.parentElement.parentElement;
+          const renameForm = parentLi.querySelector('.rename-form');
+          renameForm.style.display = 'flex';
+          this.style.display = 'none';
+        });
+      });
+
+      const cancelBtns = document.querySelectorAll('.cancel-btn');
+      cancelBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          const renameForm = this.closest('.rename-form');
+          const renameBtn = renameForm.parentElement.querySelector('.rename-btn');
+          renameForm.style.display = 'none';
+          renameBtn.style.display = 'block';
         });
       });
     });

@@ -224,7 +224,7 @@ footer {
     font-weight: 500;
 }
 
-.features {
+.cards {
     display: flex;
     justify-content: center;
     align-items: stretch;
@@ -232,10 +232,10 @@ footer {
     gap: 10px;
 }
 
-.feature {
+.card {
     position: relative;
     margin: 5px;
-    flex: 1 1 20%;
+
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
@@ -244,7 +244,11 @@ footer {
     background: white;
 }
 
-.feature:before {
+.feature {
+    flex: 1 1 20%;
+}
+
+.card:before {
     content: '';
     position: absolute;
     top: -2px;
@@ -603,4 +607,107 @@ footer {
 
 .correct-answer {
     margin-bottom: 10px;
+}
+
+/*-----------------------------MY_QUIZZES.HTML STYLES-----------------------------*/
+
+.my-quizzes-cards {
+    margin-top: 20px;
+}
+
+.quiz-card {
+    padding: 15px 5px 0 5px;
+    width: calc(20% - 10px);
+}
+
+.quiz-title-card {
+    text-align: center;
+    margin: auto;
+    font-size: 20px;
+    color: #000;
+}
+
+.quiz-buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.quiz-btn-item {
+    display: block;
+    flex: 1 1 auto;
+    max-width: 33.33%;
+    text-align: center;
+}
+
+.quiz-manage-btn {
+    padding: 2px;
+    height: 20px;
+    font-family: "Outfit", sans-serif;
+    text-align: center;
+    border-radius: 4px;
+    transition: all 0.3s;
+}
+
+.rename-btn {
+    border: 2px solid rgba(45, 123, 255, 0.8);
+    color: rgba(45, 123, 255, 0.8);
+}
+
+.rename-btn:hover {
+    background-color: rgba(45, 123, 255, 1);
+    color: #fff;
+}
+
+.btn-danger {
+    width: 100%;
+    border: 2px solid rgba(232, 92, 92, 0.8);
+    color: rgba(232, 92, 92, 0.8);
+}
+
+.btn-danger:hover {
+    background-color: rgba(232, 92, 92, 1);
+    color: #fff;
+}
+
+.share-img {
+    width: 20px;
+}
+
+.rename-form {
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.rename-input {
+    font-family: "Outfit", sans-serif;
+    width: 100px;
+    padding: 1px;
+    font-size: 11px;
+    border-radius: 2px;
+    border: 1px solid rgba(48, 45, 45, 0.7);
+    box-sizing: border-box;
+    margin: 5px 2px 2px 20px;
+    vertical-align: middle;
+}
+
+.rename-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rename-confirm-btn-img {
+    width: 25px;
+    margin-left: 10px;
+}
+
+.rename-cancel-btn-img {
+    margin-left: 10px;
+    width: 25px;
 }
