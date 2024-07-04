@@ -128,10 +128,41 @@ def generate_questions_for_quiz(quiz):
 
 def generate_questions_with_gpt(quiz, num_questions):
     # Create prompt for API ChatGPT
-    prompt = f"analyze text below and generate {num_questions} quiz questions and strictly 4 answers for each (only one of them is correct). Use this structure:\n"
-    prompt += "\t1. Question:\n\t1. answer\n\t2. answer\n\t3. answer\n\t4. answer\n"
-    prompt += f"After the all questions give a dictionary of the correct answers strictly like this (without new lines between keys:\n"
-    prompt += "{{1: 2, 2: 1, 3: 1, ...}}, where key is the question number, value is a number of the correct answer.\n"
+    # prompt = f"analyze text below and generate {num_questions} quiz questions and strictly 4 answers for each (only one of them is correct). Use this structure:\n"
+    # prompt += "\t1. Question:\t1. answer\n\t2. answer\n\t3. answer\n\t4. answer\n"
+    # prompt += f"After the all questions give a dictionary of the correct answers strictly like this (without new lines between keys:\n"
+    # prompt += "{{1: 2, 2: 1, 3: 1, ...}}, where key is the question number, value is a number of the correct answer.\n"
+
+    prompt = f"""analyze the text below and generate {num_questions} quiz questions and strictly 4 answers for each (only one of them is correct). Use this structure:
+    1. Question: [Your question here]
+    1. [answer]
+    2. [answer]
+    3. [answer]
+    4. [answer]
+
+    2. Question: [Your question here]
+    1. [answer]
+    2. [answer]
+    3. [answer]
+    4. [answer]
+
+    3. Question: [Your question here]
+    1. [answer]
+    2. [answer]
+    3. [answer]
+    4. [answer]
+
+    ...
+
+    {num_questions}. Question: [Your question here]
+    1. [answer]
+    2. [answer]
+    3. [answer]
+    4. [answer]
+
+    After all questions, give a dictionary of the correct answers strictly like this ( STRICTLY without new lines between keys):
+    {{1: 2, 2: 1, 3: 1, 4: 1, 5: 3, 6: 3, 7: 1, 8: 1, 9: 2, 10: 1}}
+    """
 
     # Add text to the prompt
     prompt += quiz.text
@@ -140,7 +171,7 @@ def generate_questions_with_gpt(quiz, num_questions):
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "system", "content": prompt}],
-        max_tokens=1000,
+        max_tokens=1500,
         format="json"
     )
 
@@ -231,9 +262,17 @@ def quiz(quiz_id):
 
         for question in questions:
             correct_answer = next((answer for answer in question.answers if answer.is_correct), None)
-            user_answer_id = int(request.form.get(f'answer{question.id}'))
+            user_answer_id_str = request.form.get(f'answer{question.id}')
 
-            if user_answer_id == correct_answer.id:
+            # if user_answer_id == correct_answer.id:
+            #     correct_count += 1
+            if user_answer_id_str is None:
+                # Handle the case where the answer is not provided
+                user_answer_id = None
+            else:
+                user_answer_id = int(user_answer_id_str)
+
+            if user_answer_id is not None and user_answer_id == correct_answer.id:
                 correct_count += 1
 
             question_results.append({
