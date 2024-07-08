@@ -148,7 +148,5 @@ I use [pytest](https://pytest.org/) as our primary testing framework due to its 
 ### Running Tests
 To run the tests locally, follow these steps:
 1. Ensure all dependencies are installed by running `pip install -r requirements.txt`.
-2. Execute `pytest` in the root directory of the project.
-3. Monitor the test output to ensure all tests pass successfully.
-4. Review the coverage report (`coverage report`) to gauge test coverage adequacy.
+2. Execute `pytest test\` in the root directory of the project.
 
