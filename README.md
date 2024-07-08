@@ -132,3 +132,23 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 ```
 This script allows users to rename quizzes inline and cancel the renaming process.
+## Testing
+
+### Overview
+I have implemented a suite of tests that cover main functionalities and scenarios within the project. These tests validate both individual components and the integrated system to maintain consistent behavior and performance.
+
+### Test Structure
+My test suite is organized into `test_routes.py` file under the `tests/` directory.
+
+### Testing Frameworks and Tools
+I use [pytest](https://pytest.org/) as our primary testing framework due to its simplicity, flexibility, and powerful features for writing and executing tests. 
+### Coverage
+<img src="project_profile/static/images/coverage.png" alt="sQuizMe Logo" style="width: 400px;">
+
+### Running Tests
+To run the tests locally, follow these steps:
+1. Ensure all dependencies are installed by running `pip install -r requirements.txt`.
+2. Execute `pytest` in the root directory of the project.
+3. Monitor the test output to ensure all tests pass successfully.
+4. Review the coverage report (`coverage report`) to gauge test coverage adequacy.
+

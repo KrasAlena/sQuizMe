@@ -15,22 +15,10 @@ load_dotenv()
 
 openai.api_key = os.getenv('OPEN_AI')
 
+
 @app.route('/')
 def index():
     return render_template('index.html')
-
-# @app.route('/login', methods=['GET', 'POST'])
-# def login():
-#     form = LoginForm()
-#     if form.validate_on_submit():
-#         user = User.query.filter_by(email=form.email.data).first()
-#         if user and user.password == form.password.data:
-#             login_user(user)
-#             flash('Logged in successfully.', 'success')
-#             return redirect(url_for('create_quiz'))
-#         else:
-#             flash('Login unsuccessful. Please check email and password.', 'danger')
-#     return render_template('login.html', form=form)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -64,13 +52,18 @@ def login():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
-        hashed_password = generate_password_hash(form.password.data).decode('utf-8')
-        user = User(email=form.email.data, name=form.name.data, password=hashed_password)
-        db.session.add(user)
-        db.session.commit()
-        flash('Your account has been created! You are now able to log in.', 'success')
-        return redirect(url_for('login'))
+        existing_user = User.query.filter_by(email=form.email.data).first()
+        if existing_user:
+            flash('Email address already registered. Please use a different email.', 'danger')
+        else:
+            hashed_password = generate_password_hash(form.password.data).decode('utf-8')
+            user = User(email=form.email.data, name=form.name.data, password=hashed_password)
+            db.session.add(user)
+            db.session.commit()
+            flash('Your account has been created! You are now able to log in.', 'success')
+            return redirect(url_for('login'))
     return render_template('register.html', form=form)
+
 
 @app.route('/create_quiz', methods=['GET', 'POST'])
 @login_required
@@ -89,6 +82,7 @@ def create_quiz():
         return redirect(url_for('generate_quiz', quiz_id=new_quiz.id))  # Передаем quiz_id
 
     return render_template('create_quiz.html', form=form)
+
 
 @app.route('/generate_quiz/<int:quiz_id>', methods=['GET', 'POST'])
 @login_required
@@ -126,13 +120,18 @@ def generate_questions_for_quiz(quiz):
 
     print("Questions and answers generated and saved successfully.")
 
-def generate_questions_with_gpt(quiz, num_questions):
-    # Create prompt for API ChatGPT
-    # prompt = f"analyze text below and generate {num_questions} quiz questions and strictly 4 answers for each (only one of them is correct). Use this structure:\n"
-    # prompt += "\t1. Question:\t1. answer\n\t2. answer\n\t3. answer\n\t4. answer\n"
-    # prompt += f"After the all questions give a dictionary of the correct answers strictly like this (without new lines between keys:\n"
-    # prompt += "{{1: 2, 2: 1, 3: 1, ...}}, where key is the question number, value is a number of the correct answer.\n"
 
+def generate_questions_with_gpt(quiz, num_questions):
+    """
+        Generate quiz questions and answers using GPT-3 API based on the provided quiz text.
+
+        Args:
+            quiz (Quiz): The Quiz object containing quiz details.
+            num_questions (int): Number of questions to generate.
+
+        Returns:
+            tuple: A tuple containing generated questions, question-answer dictionary, and correct answers.
+    """
     prompt = f"""analyze the text below and generate {num_questions} quiz questions and strictly 4 answers for each (only one of them is correct). Use this structure:
     1. Question: [Your question here]
     1. [answer]
@@ -190,7 +189,19 @@ def generate_questions_with_gpt(quiz, num_questions):
     print(f'KEYS: {correct_answers}')
     return questions, question_answer_dict, correct_answers
 
+
 def parse_questions_and_answers(generated_text):
+    """
+        Parses generated text to extract questions, answers, and correct answers.
+
+        Args:
+        - generated_text (str): Text containing questions, answers, and correct answers.
+
+        Returns:
+        - questions (list): List of parsed questions.
+        - question_answer_dict (dict): Dictionary mapping question numbers to lists of answers.
+        - correct_answers (list): List of correct answers.
+    """
     questions = []
     question_answer_dict = {}
     correct_answers_dict = {}
@@ -248,10 +259,18 @@ def parse_questions_and_answers(generated_text):
     return questions, question_answer_dict, correct_answers
 
 
-
 @app.route('/quiz/<int:quiz_id>', methods=['GET', 'POST'])
 @login_required
 def quiz(quiz_id):
+    """
+        Display quiz questions and handle user answers for a given quiz.
+
+        Args:
+            quiz_id (int): The ID of the quiz to display.
+
+        Returns:
+            render_template: Renders the quiz template with quiz details and results.
+    """
     quiz = Quiz.query.get_or_404(quiz_id)
     questions = quiz.questions
 
@@ -354,6 +373,15 @@ def rename_quiz(quiz_id):
 @app.route('/share_quiz/<int:quiz_id>', methods=['POST'])
 @login_required
 def share_quiz(quiz_id):
+    """
+        Share a quiz by marking it as public in the database.
+
+        Args:
+            quiz_id (int): The ID of the quiz to share.
+
+        Returns:
+            redirect: Redirects to the user's quizzes page after sharing the quiz.
+    """
     quiz = Quiz.query.get_or_404(quiz_id)
 
     if quiz.author != current_user:
