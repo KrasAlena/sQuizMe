@@ -4,6 +4,8 @@
 
 sQuizMe is a web application designed to help users create and manage quizzes. It provides a platform where users can create quizzes on various topics, generate quiz questions using AI (Artificial Intelligence), and share their quizzes with others.
 
+## About application:
+
 ### Key features:
 
 	•	Quiz creation: Users can create quizzes by entering a quiz name, description, and specifying the number of questions.
@@ -137,16 +139,31 @@ This script allows users to rename quizzes inline and cancel the renaming proces
 ### Overview
 I have implemented a suite of tests that cover main functionalities and scenarios within the project. These tests validate both individual components and the integrated system to maintain consistent behavior and performance.
 
-### Test Structure
+### Test structure
 My test suite is organized into `test_routes.py` file under the `tests/` directory.
 
-### Testing Frameworks and Tools
+### Testing frameworks and tools
 I use [pytest](https://pytest.org/) as our primary testing framework due to its simplicity, flexibility, and powerful features for writing and executing tests. 
 ### Coverage
-<img src="project_profile/static/images/coverage.png" alt="sQuizMe Logo" style="width: 400px;">
+<img src="project_profile/static/images/coverage.png" alt="report" style="width: 400px;">
 
-### Running Tests
+### Running tests
 To run the tests locally, follow these steps:
 1. Ensure all dependencies are installed by running `pip install -r requirements.txt`.
 2. Execute `pytest test\` in the root directory of the project.
 
+## Development process overview
+
+### Design phase
+The development of my application began with a comprehensive design phase. I utilized Figma to create a detailed schema outlining the functionalities across three main levels:
+1. User page creation and quiz creation
+2. Quiz storage and management (Renaming, Deletion)
+3. Public quiz creation
+
+This initial schema provided a clear roadmap for implementing all planned features.
+<img src="project_profile/static/images/scheme.png" alt="scheme" style="width: 500px;">
+
+### Implementation and feature development
+Following the design phase, I proceeded with the implementation of each feature outlined in the schema. Features were developed iteratively, ensuring that each level of functionality was completed and tested before moving on to the next.
+### Demo
+For a brief demonstration of the application's features, you can watch my demo video on [YouTube](https://youtu.be/pzcMGNkjRRI).
